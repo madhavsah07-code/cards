@@ -1,0 +1,74 @@
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import LoadingScreen from './components/LoadingScreen';
+import Cursor from './components/Cursor';
+import Navbar from './components/Navbar';
+import OpeningScreen from './components/OpeningScreen';
+import HeroSection from './components/HeroSection';
+import BrideGroomSection from './components/BrideGroomSection';
+import EventTimeline from './components/EventTimeline';
+import GallerySection from './components/GallerySection';
+import FamilySection from './components/FamilySection';
+import RSVPSection from './components/RSVPSection';
+import Footer from './components/Footer';
+import FloatingPetals from './components/FloatingPetals';
+import MusicToggle from './components/MusicToggle';
+
+function App() {
+  const [loading, setLoading] = useState(true);
+  const [showOpening, setShowOpening] = useState(false);
+  const [showMain, setShowMain] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+      setShowOpening(true);
+    }, 3500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleOpenInvitation = () => {
+    setShowOpening(false);
+    setTimeout(() => setShowMain(true), 600);
+  };
+
+  return (
+    <div className="relative min-h-screen bg-[#080205] overflow-x-hidden">
+      <Cursor />
+      <FloatingPetals />
+
+      <AnimatePresence>
+        {loading && <LoadingScreen key="loading" />}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showOpening && !loading && (
+          <OpeningScreen key="opening" onOpen={handleOpenInvitation} />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showMain && (
+          <motion.div
+            key="main"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1.2 }}
+          >
+            <Navbar />
+            <HeroSection />
+            <BrideGroomSection />
+            <EventTimeline />
+            <GallerySection />
+            <FamilySection />
+            <RSVPSection />
+            <Footer />
+            <MusicToggle />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+export default App;
