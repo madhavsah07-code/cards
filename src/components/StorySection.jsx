@@ -20,7 +20,7 @@
 //   {
 //     year: '2022',
 //     title: 'A Trip to Remember',
-//     desc: 'Under the golden skies of Rajasthan, Arjun realized — she was the one. Every monument whispered their love story.',
+//     desc: 'Under the golden skies of Rajasthan, Ujjwal realized — she was the one. Every monument whispered their love story.',
 //     emoji: '🏰',
 //     side: 'left',
 //   },

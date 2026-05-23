@@ -142,14 +142,14 @@ export default function HeroSection() {
           className="mb-6"
         >
           <h1 className="font-cinzel font-black text-6xl sm:text-8xl md:text-[9rem] lg:text-[11rem] leading-none shimmer-gold tracking-tight">
-            Ujjwal
+            Durga
           </h1>
           <motion.div
             className="font-dancing text-4xl md:text-6xl text-amber-300/70 my-2"
             animate={{ scale: [1, 1.05, 1] }}
             transition={{ duration: 3, repeat: Infinity }}
           >
-            &amp; Durga
+            &amp; UJJWAL
           </motion.div>
         </motion.div>
 

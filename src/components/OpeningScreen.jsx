@@ -136,11 +136,11 @@ export default function OpeningScreen({ onOpen }) {
           className="mb-2"
         >
           <h1 className="font-cinzel font-black text-5xl md:text-8xl shimmer-gold tracking-tight mb-2 leading-none">
-            Ujjwal
+            Durga
           </h1>
           <p className="font-dancing text-3xl md:text-5xl text-amber-300/80 mb-2">&</p>
           <h1 className="font-cinzel font-black text-5xl md:text-8xl shimmer-gold tracking-tight leading-none">
-            Durga
+            ujjwal
           </h1>
         </motion.div>
 
