@@ -8,9 +8,10 @@ const events = [
     hindi: 'मटकोर',
     date: '23 June 2026',
     day: 'Tuesday',
-    time: '6:00 PM onwards',
-    venue: 'Sharma Family Residence',
-    location: 'Jaipur, Rajasthan',
+    time: '7:00 PM onwards',
+    venue: 'Sha Family Residence',
+    location: 'Darbhanga, Bihar',
+    mapLink: 'https://maps.app.goo.gl/HU1w43GKGfZoNccB9',
     desc: 'A sacred pre-wedding ceremony where the bride and groom are blessed with turmeric and oil, celebrating the beginning of a divine journey.',
     emoji: '🌿',
     icon: '🏺',
@@ -24,9 +25,10 @@ const events = [
     hindi: 'संगीत',
     date: '24 June 2026',
     day: 'Wednesday',
-    time: '7:00 PM to 11:00 PM',
-    venue: 'Royal Banquet Hall',
-    location: 'Mumbai, Maharashtra',
+    time: '5:00 PM to 11:00 PM',
+    venue: 'Fusion Retreat Resort',
+    location: 'Ranipur, NH 27, Darbhanga (near the Darbhanga Airport terminal)',
+    mapLink: 'https://www.google.com/maps/search/?api=1&query=Fusion+Retreat+Resort+Darbhanga',
     desc: 'An enchanting night of music, dance, and celebration as both families come together to sing, laugh, and create memories eternal.',
     emoji: '🎶',
     icon: '🎵',
@@ -40,9 +42,10 @@ const events = [
     hindi: 'विवाह',
     date: '25 June 2026',
     day: 'Thursday',
-    time: '10:00 AM — Auspicious Muhurat',
-    venue: 'The Grand Mandap',
-    location: 'Mumbai, Maharashtra',
+    time: '10:00 PM — Auspicious Muhurat',
+    venue: 'Fusion Retreat Resort',
+    location: 'Ranipur, NH 27, Darbhanga (near the Darbhanga Airport terminal)',
+    mapLink: 'https://www.google.com/maps/search/?api=1&query=Fusion+Retreat+Resort+Darbhanga',
     desc: 'The divine union of two souls, blessed by sacred fire and the eternal vows of saat pheras. A celebration of love, tradition, and new beginnings.',
     emoji: '🪔',
     icon: '💍',
@@ -77,7 +80,7 @@ function EventCard({ event, index }) {
         }}
       >
         {event.featured && (
-          <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-20">
+          <div className="absolute -top-0 left-1/2 -translate-x-1/2 z-20">
             <span className="font-cinzel text-xs tracking-widest uppercase px-4 py-1 rounded-full"
               style={{ background: 'linear-gradient(135deg, #f59e0b, #ea580c)', color: '#0a0305' }}>
               ✦ Main Event ✦
@@ -120,13 +123,24 @@ function EventCard({ event, index }) {
               <span className="text-lg">⏰</span>
               <p className="font-cormorant text-base text-amber-100/70">{event.time}</p>
             </div>
-            <div className="flex items-center gap-3">
+            <a
+              href={event.mapLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-3 group/location cursor-pointer"
+            >
               <span className="text-lg">📍</span>
+
               <div>
-                <p className="font-cormorant text-base text-amber-100/80">{event.venue}</p>
-                <p className="font-inter text-xs text-amber-400/50">{event.location}</p>
+                <p className="font-cormorant text-base text-amber-100/80 group-hover/location:text-amber-300 transition-colors duration-300">
+                  {event.venue}
+                </p>
+
+                <p className="font-inter text-xs text-amber-400/50 group-hover/location:text-amber-400/80 transition-colors duration-300">
+                  {event.location}
+                </p>
               </div>
-            </div>
+            </a>
           </div>
 
           {/* Desc */}

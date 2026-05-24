@@ -10,21 +10,11 @@ import { useInView } from 'react-intersection-observer';
 
 /* ─── Data ────────────────────────────────────────────────── */
 const groomTraits = [
-  { icon: '💼', label: 'Business', color: '#f59e0b' },
-  { icon: '🏏', label: 'Cricket', color: '#ea580c' },
-  { icon: '🎵', label: 'Music', color: '#fbbf24' },
-  { icon: '✈️', label: 'Travel', color: '#f97316' },
-  { icon: '🏋️', label: 'Fitness', color: '#d97706' },
-  { icon: '📖', label: 'Reading', color: '#b45309' },
+  
 ];
 
 const brideTraits = [
-  { icon: '💃', label: 'Dance', color: '#f43f5e' },
-  { icon: '🎨', label: 'Art', color: '#fb923c' },
-  { icon: '📚', label: 'Books', color: '#f59e0b' },
-  { icon: '👗', label: 'Fashion', color: '#e879f9' },
-  { icon: '🎵', label: 'Music', color: '#fbbf24' },
-  { icon: '🌸', label: 'Cooking', color: '#f97316' },
+  
 ];
 
 /* ─── Mandala SVG ─────────────────────────────────────────── */

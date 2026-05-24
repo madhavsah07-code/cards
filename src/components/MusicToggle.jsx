@@ -1,11 +1,32 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function MusicToggle() {
-  const [playing, setPlaying] = useState(true);
+  const [playing, setPlaying] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
 
   const audioRef = useRef(null);
+
+  useEffect(() => {
+    const startMusic = async () => {
+      try {
+        if (!audioRef.current) {
+          audioRef.current = new Audio('/music/Sajna Darshan Raval Instrumental.mp3');
+
+          audioRef.current.loop = true;
+          audioRef.current.volume = 1.0;
+          audioRef.current.preload = 'auto';
+        }
+
+        await audioRef.current.play();
+        setPlaying(true);
+      } catch (error) {
+        console.log('Autoplay blocked:', error);
+      }
+    };
+
+    startMusic();
+  }, []);
 
   const toggle = async () => {
     try {
