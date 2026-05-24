@@ -21,8 +21,8 @@ const events = [
     delay: 0,
   },
   {
-    name: 'Sangeet',
-    hindi: 'संगीत',
+    name: 'Haldi & Mehedi',
+    hindi: 'हल्दी और मेहंदी',
     date: '24 June 2026',
     day: 'Wednesday',
     time: '5:00 PM to 11:00 PM',
