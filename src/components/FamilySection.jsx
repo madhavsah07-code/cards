@@ -15,7 +15,7 @@ const familyData = {
       { role: "Father of the Bride", name: "Shri Radhe Shyam Sah", emoji: "👨" },
       { role: "Mother of the Bride", name: "Smt. Rajni Devi", emoji: "👩" },
       { role: "Brother's", name: "Basudeo & Madhav", emoji: "👦" },
-      { role: "Sister", name: "Megha", emoji: "👧" },
+      { role: "Sister", name: "Meghawati", emoji: "👧" },
     ],
   },
 
