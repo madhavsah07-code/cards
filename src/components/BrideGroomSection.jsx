@@ -264,7 +264,7 @@ function PortraitPanel({ side, imgSrc, title, name, desc, traits, accentColor, g
           className="font-cinzel text-[10px] tracking-[0.5em] uppercase text-center mb-4"
           style={{ color: `${accentColor}60` }}
         >
-          ✦ Passions & Personality ✦
+          
         </p>
         <div className="grid grid-cols-3 gap-3">
           {traits.map((t, i) => (
@@ -278,110 +278,83 @@ function PortraitPanel({ side, imgSrc, title, name, desc, traits, accentColor, g
 
 /* ─── Center Monogram ─────────────────────────────────────── */
 function CenterMonogram() {
-  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.3 });
+  const { ref, inView } = useInView({
+    triggerOnce: true,
+    threshold: 0.3,
+  });
 
   return (
     <motion.div
       ref={ref}
       initial={{ opacity: 0, scale: 0.5 }}
       animate={inView ? { opacity: 1, scale: 1 } : {}}
-      transition={{ duration: 1, delay: 0.3, type: 'spring', stiffness: 60 }}
-      className="flex-shrink-0 flex flex-col items-center gap-5 relative z-10"
+      transition={{
+        duration: 1,
+        delay: 0.3,
+        type: 'spring',
+        stiffness: 60,
+      }}
+      className="flex-shrink-0 relative z-10 flex items-center justify-center self-center lg:self-auto w-full lg:w-auto min-h-[120px] lg:min-h-[180px]"
     >
-      {/* Top vertical line */}
+      {/* Left line */}
       <motion.div
-        className="hidden lg:block w-px"
-        style={{ background: 'linear-gradient(180deg, transparent, rgba(245,158,11,0.4))', height: 60 }}
-        animate={{ scaleY: [0, 1] }}
-        transition={{ duration: 0.8, delay: 0.5 }}
-      />
-
-      {/* Mandala circle */}
-      <div className="relative w-28 h-28 lg:w-36 lg:h-36">
-        {/* Rotating outer ring */}
-        <motion.div
-          className="absolute inset-0 rounded-full"
-          style={{ border: '1px solid rgba(245,158,11,0.25)' }}
-          animate={{ rotate: 360 }}
-          transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
-        />
-        <motion.div
-          className="absolute inset-2 rounded-full"
-          style={{ border: '1px dashed rgba(249,115,22,0.2)' }}
-          animate={{ rotate: -360 }}
-          transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-        />
-        {/* Mandala SVG */}
-        <div className="absolute inset-0">
-          <MandalaSVG />
-        </div>
-        {/* Center diya */}
-        <motion.div
-          className="absolute inset-0 flex items-center justify-center"
-          animate={{ scale: [1, 1.08, 1] }}
-          transition={{ duration: 3, repeat: Infinity }}
-        >
-          <span className="text-3xl diya-glow">🪔</span>
-        </motion.div>
-        {/* Orbit dots */}
-        {[0, 72, 144, 216, 288].map((deg, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-2 h-2 rounded-full"
-            style={{
-              background: '#f59e0b',
-              boxShadow: '0 0 6px #f59e0b',
-              top: '50%',
-              left: '50%',
-              transformOrigin: '0 0',
-            }}
-            animate={{ rotate: [deg, deg + 360] }}
-            transition={{ duration: 15, repeat: Infinity, ease: 'linear', delay: i * 0.2 }}
-          >
-            <div
-              className="w-2 h-2 rounded-full"
-              style={{
-                transform: `translate(-50%, -50%) translateX(${52}px)`,
-                background: i % 2 === 0 ? '#f59e0b' : '#ea580c',
-              }}
-            />
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Monogram text */}
-      <div className="text-center">
-        <motion.p
-          className="font-cinzel font-bold text-2xl shimmer-gold tracking-wider"
-          animate={{ opacity: [0.7, 1, 0.7] }}
-          transition={{ duration: 3, repeat: Infinity }}
-        >
-          U &amp; D
-        </motion.p>
-      </div>
-
-      {/* "Together" label */}
-      <div
-        className="px-4 py-2 rounded-full text-center"
+        className="absolute left-[-45px] lg:left-[-70px] top-1/2 -translate-y-1/2 h-px w-10 lg:w-16"
         style={{
-          background: 'rgba(8,2,5,0.7)',
-          border: '1px solid rgba(245,158,11,0.2)',
-          backdropFilter: 'blur(10px)',
-          maxWidth: 150,
+          background:
+            'linear-gradient(90deg, transparent, rgba(245,158,11,0.5))',
         }}
-      >
-        <p className="font-cormorant italic text-xs text-amber-300/60 leading-snug text-center">
-          Together with<br />their families
-        </p>
-      </div>
-
-      {/* Bottom vertical line */}
-      <motion.div
-        className="hidden lg:block w-px"
-        style={{ background: 'linear-gradient(180deg, rgba(245,158,11,0.4), transparent)', height: 60 }}
-        animate={{ scaleY: [0, 1] }}
-        transition={{ duration: 0.8, delay: 0.7 }}
+        initial={{ scaleX: 0 }}
+        animate={{ scaleX: 1 }}
+        transition={{ duration: 0.8, delay: 0.4 }}
       />
+
+      {/* Right line */}
+      <motion.div
+        className="absolute right-[-45px] lg:right-[-70px] top-1/2 -translate-y-1/2 h-px w-10 lg:w-16"
+        style={{
+          background:
+            'linear-gradient(90deg, rgba(245,158,11,0.5), transparent)',
+        }}
+        initial={{ scaleX: 0 }}
+        animate={{ scaleX: 1 }}
+        transition={{ duration: 0.8, delay: 0.4 }}
+      />
+
+      {/* Center logo */}
+      <motion.div
+        className="relative flex items-center justify-center mx-auto"
+        animate={{ scale: [1, 1.08, 1] }}
+        transition={{ duration: 3, repeat: Infinity }}
+      >
+        {/* Glow */}
+        <motion.div
+          className="absolute w-28 h-28 lg:w-32 lg:h-32 rounded-full"
+          style={{
+            background:
+              'radial-gradient(circle, rgba(251,191,36,0.22), transparent 70%)',
+            filter: 'blur(10px)',
+          }}
+          animate={{
+            scale: [1, 1.15, 1],
+            opacity: [0.4, 0.8, 0.4],
+          }}
+          transition={{
+            duration: 2.5,
+            repeat: Infinity,
+          }}
+        />
+
+        {/* Logo container */}
+        <div className="relative z-10 w-24 h-24 lg:w-24 lg:h-24 rounded-full bg-black/20 backdrop-blur-md border border-amber-400/20 flex items-center justify-center shadow-[0_0_45px_rgba(251,191,36,0.28)]">
+          
+          <img
+            src="/images/du-logo.png"
+            alt="Durga & Ujjwal Logo"
+            className="w-16 lg:w-[72px] object-contain rounded-full p-1 scale-110 drop-shadow-[0_0_20px_rgba(251,191,36,0.75)]"
+          />
+
+        </div>
+      </motion.div>
     </motion.div>
   );
 }

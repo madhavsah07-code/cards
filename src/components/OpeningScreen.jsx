@@ -4,9 +4,9 @@ import confetti from 'canvas-confetti';
 
 export default function OpeningScreen({ onOpen }) {
   useEffect(() => {
-    // Fire confetti on mount
     const timer = setTimeout(() => {
       const colors = ['#f59e0b', '#ea580c', '#fcd34d', '#f97316', '#dc2626', '#fbbf24'];
+
       confetti({
         particleCount: 120,
         spread: 100,
@@ -15,6 +15,7 @@ export default function OpeningScreen({ onOpen }) {
         shapes: ['circle', 'square'],
         scalar: 1.2,
       });
+
       setTimeout(() => {
         confetti({
           particleCount: 80,
@@ -23,6 +24,7 @@ export default function OpeningScreen({ onOpen }) {
           colors,
           angle: 60,
         });
+
         confetti({
           particleCount: 80,
           spread: 70,
@@ -32,6 +34,7 @@ export default function OpeningScreen({ onOpen }) {
         });
       }, 500);
     }, 800);
+
     return () => clearTimeout(timer);
   }, []);
 
@@ -39,7 +42,8 @@ export default function OpeningScreen({ onOpen }) {
     <motion.div
       className="fixed inset-0 z-[999] flex flex-col items-center justify-center overflow-hidden"
       style={{
-        background: 'radial-gradient(ellipse at 60% 30%, #1a0505 0%, #080205 60%), radial-gradient(ellipse at 30% 80%, #1a0a02 0%, transparent 50%)',
+        background:
+          'radial-gradient(ellipse at 60% 30%, #1a0505 0%, #080205 60%), radial-gradient(ellipse at 30% 80%, #1a0a02 0%, transparent 50%)',
       }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.7 }}
@@ -53,11 +57,11 @@ export default function OpeningScreen({ onOpen }) {
           backgroundPosition: 'center',
         }}
       />
+
       <div className="absolute inset-0 bg-gradient-to-b from-[#080205]/70 via-transparent to-[#080205]/90" />
 
       {/* Animated border ornaments */}
       <div className="absolute inset-6 md:inset-10 pointer-events-none">
-        {/* Corner pieces */}
         {[
           'top-0 left-0 origin-top-left',
           'top-0 right-0 origin-top-right rotate-90',
@@ -83,39 +87,32 @@ export default function OpeningScreen({ onOpen }) {
 
       {/* Content */}
       <div className="relative z-10 text-center px-6 max-w-3xl mx-auto">
-        {/* Seal/Logo */}
+        {/* Logo */}
         <motion.div
-          initial={{ scale: 0, rotate: -180 }}
-          animate={{ scale: 1, rotate: 0 }}
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 1.2, type: 'spring', stiffness: 60, delay: 0.2 }}
-          className="relative mx-auto mb-8 w-32 h-32 flex items-center justify-center"
+          className="relative mx-auto mb-8 flex items-center justify-center"
         >
+          {/* Glow */}
           <motion.div
-            className="absolute inset-0 rounded-full"
-            style={{ border: '2px solid rgba(245,158,11,0.4)' }}
-            animate={{ rotate: 360 }}
-            transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
+            className="absolute w-56 h-56 rounded-full"
+            style={{
+              background: 'radial-gradient(circle, rgba(251,191,36,0.22), transparent 70%)',
+              filter: 'blur(10px)',
+            }}
+            animate={{ scale: [1, 1.15, 1], opacity: [0.4, 0.8, 0.4] }}
+            transition={{ duration: 2.5, repeat: Infinity }}
           />
-          <motion.div
-            className="absolute inset-3 rounded-full"
-            style={{ border: '1px solid rgba(249,115,22,0.3)' }}
-            animate={{ rotate: -360 }}
-            transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
-          />
-          {/* Dots */}
-          {[0, 60, 120, 180, 240, 300].map((deg, i) => (
-            <div
-              key={i}
-              className="absolute w-2 h-2 rounded-full bg-amber-400"
-              style={{
-                top: '50%',
-                left: '50%',
-                transform: `rotate(${deg}deg) translate(56px, -50%)`,
-                boxShadow: '0 0 8px #f59e0b',
-              }}
+
+          {/* Circular logo container */}
+          <div className="relative z-10 w-52 h-52 md:w-64 md:h-64 rounded-full bg-black/20 backdrop-blur-md border border-amber-400/20 flex items-center justify-center shadow-[0_0_60px_rgba(251,191,36,0.18)]">
+            <img
+              src="/images/du-logo.png"
+              alt="Durga & Ujjwal Logo"
+              className="w-48 md:w-56 object-contain rounded-full p-2 scale-110 drop-shadow-[0_0_35px_rgba(251,191,36,0.75)]"
             />
-          ))}
-          <span className="text-5xl relative z-10 diya-glow">🪔</span>
+          </div>
         </motion.div>
 
         {/* You're Invited */}
@@ -138,9 +135,11 @@ export default function OpeningScreen({ onOpen }) {
           <h1 className="font-cinzel font-black text-5xl md:text-8xl shimmer-gold tracking-tight mb-2 leading-none">
             Durga
           </h1>
+
           <p className="font-dancing text-3xl md:text-5xl text-amber-300/80 mb-2">&</p>
+
           <h1 className="font-cinzel font-black text-5xl md:text-8xl shimmer-gold tracking-tight leading-none">
-            ujjwal
+            Ujjwal
           </h1>
         </motion.div>
 
@@ -181,6 +180,7 @@ export default function OpeningScreen({ onOpen }) {
           }}
         >
           <span className="relative z-10 font-bold">Open Invitation</span>
+
           <motion.div
             className="absolute inset-0"
             style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.2), transparent)' }}
@@ -188,22 +188,9 @@ export default function OpeningScreen({ onOpen }) {
             whileHover={{ x: '100%' }}
             transition={{ duration: 0.5 }}
           />
-          {/* Sparkles */}
+
           <span className="absolute -top-1 -right-1 text-xs">✨</span>
         </motion.button>
-
-        {/* Floating diyas */}
-        {[-120, -60, 60, 120].map((x, i) => (
-          <motion.span
-            key={i}
-            className="absolute text-2xl opacity-40 pointer-events-none"
-            style={{ left: `calc(50% + ${x}px)`, bottom: '15%' }}
-            animate={{ y: [0, -15, 0], opacity: [0.3, 0.6, 0.3] }}
-            transition={{ duration: 3 + i, repeat: Infinity, delay: i * 0.7 }}
-          >
-            🪔
-          </motion.span>
-        ))}
       </div>
 
       {/* Ambient particles */}

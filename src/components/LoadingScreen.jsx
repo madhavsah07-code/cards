@@ -50,22 +50,31 @@ export default function LoadingScreen() {
           />
         ))}
 
-        {/* Center diya SVG */}
+        {/* Center logo image */}
         <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.5, type: 'spring', stiffness: 100 }}
-          className="relative z-10 text-5xl"
+          className="relative z-10"
         >
-          🪔
+          <div className="w-52 h-52 md:w-64 md:h-64 rounded-full bg-black/20 backdrop-blur-md border border-amber-400/20 flex items-center justify-center shadow-[0_0_60px_rgba(251,191,36,0.18)]">
+            <img
+              src="/images/du-logo.png"
+              alt="Durga & Ujjwal Logo"
+              className="w-40 md:w-48 object-contain rounded-full p-4 drop-shadow-[0_0_35px_rgba(251,191,36,0.75)]"
+            />
+          </div>
         </motion.div>
 
         {/* Flame glow */}
         <motion.div
-          className="absolute w-10 h-10 rounded-full"
-          style={{ background: 'radial-gradient(circle, rgba(251,191,36,0.6), transparent)' }}
-          animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
-          transition={{ duration: 1.5, repeat: Infinity }}
+          className="absolute w-40 h-40 rounded-full"
+          style={{
+            background: 'radial-gradient(circle, rgba(251,191,36,0.22), transparent 70%)',
+            filter: 'blur(8px)',
+          }}
+          animate={{ scale: [1, 1.2, 1], opacity: [0.4, 0.9, 0.4] }}
+          transition={{ duration: 2, repeat: Infinity }}
         />
       </div>
 
@@ -77,7 +86,7 @@ export default function LoadingScreen() {
         className="text-center"
       >
         <h1 className="font-cinzel text-xl md:text-2xl tracking-[0.4em] uppercase mb-3 shimmer-gold">
-          Ujjwal & Durga
+          Durga & Ujjwal
         </h1>
         <p className="font-dancing text-lg text-amber-400/70 mb-8">
           A union blessed by the divine...

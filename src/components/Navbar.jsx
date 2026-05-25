@@ -12,6 +12,7 @@ const navLinks = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState('');
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => {
@@ -33,21 +34,43 @@ export default function Navbar() {
   return (
     <motion.nav
       initial={{ y: -80, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.8, ease: 'easeOut' }}
+      animate={{
+        y: scrolled ? 0 : -100,
+        opacity: scrolled ? 1 : 0,
+      }}
+      transition={{ duration: 0.5, ease: 'easeOut' }}
       className={`fixed top-0 left-0 right-0 z-[500] transition-all duration-500 ${
         scrolled
-          ? 'py-3 bg-[rgba(8,2,5,0.85)] backdrop-blur-xl border-b border-amber-900/30 shadow-[0_4px_30px_rgba(0,0,0,0.5)]'
-          : 'py-5 bg-transparent'
+          ? 'py-3 bg-[rgba(8,2,5,0.85)] backdrop-blur-xl border-b border-amber-900/30 shadow-[0_4px_30px_rgba(0,0,0,0.5)] pointer-events-auto'
+          : 'py-5 bg-transparent pointer-events-none'
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
         {/* Logo */}
         <a href="#hero" className="flex items-center gap-3 group" data-hover>
-          <span className="text-2xl group-hover:scale-110 transition-transform duration-300">🪔</span>
-          <div>
-            <p className="font-cinzel text-xs tracking-[0.3em] shimmer-gold uppercase">U & D</p>
-          </div>
+          <motion.div
+            whileHover={{ scale: 1.08 }}
+            transition={{ duration: 0.3 }}
+            className="relative flex items-center justify-center"
+          >
+            {/* Glow */}
+            <div
+              className="absolute inset-0 rounded-full blur-md opacity-70"
+              style={{
+                background:
+                  'radial-gradient(circle, rgba(251,191,36,0.35), transparent 70%)',
+              }}
+            />
+
+            {/* Logo container */}
+            <div className="relative z-10 w-11 h-11 rounded-full bg-black/20 backdrop-blur-md border border-amber-400/20 flex items-center justify-center shadow-[0_0_20px_rgba(251,191,36,0.25)]">
+              <img
+                src="/images/du-logo.png"
+                alt="Durga & Ujjwal Logo"
+                className="w-8 object-contain rounded-full scale-110 drop-shadow-[0_0_10px_rgba(251,191,36,0.75)]"
+              />
+            </div>
+          </motion.div>
         </a>
 
         {/* Links */}
@@ -87,10 +110,57 @@ export default function Navbar() {
         </a>
 
         {/* Mobile menu icon */}
-        <button className="md:hidden text-amber-400 text-xl" data-hover>
-          ☰
+        <button
+          className="md:hidden text-amber-400 text-2xl z-[600]"
+          data-hover
+          onClick={() => setMobileOpen(!mobileOpen)}
+        >
+          {mobileOpen ? '✕' : '☰'}
         </button>
       </div>
+
+      {/* Mobile Menu */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{
+          opacity: mobileOpen ? 1 : 0,
+          y: mobileOpen ? 0 : -20,
+          pointerEvents: mobileOpen ? 'auto' : 'none',
+        }}
+        transition={{ duration: 0.3 }}
+        className="md:hidden absolute top-full left-0 right-0 bg-[rgba(8,2,5,0.96)] backdrop-blur-2xl border-b border-amber-900/20 shadow-[0_10px_40px_rgba(0,0,0,0.6)]"
+      >
+        <div className="flex flex-col px-6 py-6 gap-5">
+          {navLinks.map(link => (
+            <a
+              key={link.href}
+              href={link.href}
+              onClick={() => setMobileOpen(false)}
+              className={`font-cinzel text-sm tracking-[0.2em] uppercase transition-all duration-300 ${
+                active === link.href.slice(1)
+                  ? 'text-amber-300'
+                  : 'text-amber-100/70'
+              }`}
+            >
+              {link.label}
+            </a>
+          ))}
+
+          <a
+            href="#rsvp"
+            onClick={() => setMobileOpen(false)}
+            className="mt-2 text-center font-cinzel text-xs tracking-[0.2em] uppercase px-5 py-3 rounded-full"
+            style={{
+              background:
+                'linear-gradient(135deg, rgba(245,158,11,0.18), rgba(234,88,12,0.18))',
+              border: '1px solid rgba(245,158,11,0.35)',
+              color: '#fde68a',
+            }}
+          >
+            RSVP
+          </a>
+        </div>
+      </motion.div>
     </motion.nav>
   );
 }

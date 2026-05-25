@@ -4,10 +4,16 @@ import { useInView } from 'react-intersection-observer';
 import { FaInstagram, FaFacebookF, FaYoutube, FaWhatsapp } from 'react-icons/fa';
 
 const socialLinks = [
-  { Icon: FaInstagram, href: '#', label: 'Instagram' },
-  { Icon: FaFacebookF, href: '#', label: 'Facebook' },
-  { Icon: FaYoutube, href: '#', label: 'YouTube' },
-  { Icon: FaWhatsapp, href: '#', label: 'WhatsApp' },
+  {
+    Icon: FaInstagram,
+    href: 'https://www.instagram.com/madhav_n05/',
+    label: 'Instagram',
+  },
+  {
+    Icon: FaWhatsapp,
+    href: 'https://wa.me/916204760542',
+    label: 'WhatsApp',
+  },
 ];
 
 export default function Footer() {
@@ -92,32 +98,40 @@ export default function Footer() {
             initial={{ opacity: 0, y: 20 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.6 }}
-            className="flex justify-center gap-5 mb-12"
+            className="flex flex-col items-center gap-5 mb-12"
           >
-            {socialLinks.map(({ Icon, href, label }) => (
-              <a
-                key={label}
-                href={href}
-                aria-label={label}
-                data-hover
-                className="w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
-                style={{
-                  background: 'rgba(245,158,11,0.08)',
-                  border: '1px solid rgba(245,158,11,0.25)',
-                  color: '#fde68a',
-                }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.background = 'rgba(245,158,11,0.2)';
-                  e.currentTarget.style.boxShadow = '0 0 20px rgba(245,158,11,0.3)';
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.background = 'rgba(245,158,11,0.08)';
-                  e.currentTarget.style.boxShadow = 'none';
-                }}
-              >
-                <Icon size={18} />
-              </a>
-            ))}
+            <div className="flex justify-center gap-5">
+              {socialLinks.map(({ Icon, href, label }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  data-hover
+                  className="w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+                  style={{
+                    background: 'rgba(245,158,11,0.08)',
+                    border: '1px solid rgba(245,158,11,0.25)',
+                    color: '#fde68a',
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.background = 'rgba(245,158,11,0.2)';
+                    e.currentTarget.style.boxShadow = '0 0 20px rgba(245,158,11,0.3)';
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.background = 'rgba(245,158,11,0.08)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
+                >
+                  <Icon size={18} />
+                </a>
+              ))}
+            </div>
+
+            <p className="font-cinzel text-sm md:text-base tracking-[0.3em] uppercase text-amber-300/70 mt-2">
+              Contact Me
+            </p>
           </motion.div>
 
           {/* Bottom line */}
@@ -125,7 +139,7 @@ export default function Footer() {
             style={{ background: 'linear-gradient(90deg, transparent, rgba(245,158,11,0.3), transparent)' }} />
 
           <p className="font-inter text-xs tracking-widest text-amber-400/30 uppercase">
-            Made with ❤️ by Madhav for Ujjwal & Durga’s Wedding · 25 June 2026          </p>
+            Made with ❤️ by Madhav for Durga & Ujjwal’s Wedding · 25 June 2026          </p>
 
           {/* Bottom decorative stars */}
           <div className="flex justify-center gap-2 mt-4 text-amber-500/20 text-xs">
