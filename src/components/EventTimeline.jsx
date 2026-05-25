@@ -139,6 +139,9 @@ function EventCard({ event, index }) {
                 <p className="font-inter text-xs text-amber-400/50 group-hover/location:text-amber-400/80 transition-colors duration-300">
                   {event.location}
                 </p>
+                <p className="font-inter text-[10px] uppercase tracking-[0.25em] text-amber-500/70 group-hover/location:text-amber-300 transition-colors duration-300 mt-1">
+                  Click here for location
+                </p>
               </div>
             </a>
           </div>
