@@ -154,7 +154,6 @@ Please RSVP at your earliest convenience.          </p>
                     value={form.email}
                     onChange={handleChange}
                     placeholder="your@email.com"
-                    required
                     className="rsvp-input"
                     id="rsvp-email"
                   />
