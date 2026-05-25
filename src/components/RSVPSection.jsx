@@ -6,6 +6,7 @@ export default function RSVPSection() {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.2 });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -31,13 +32,53 @@ export default function RSVPSection() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => {
+    setError(null);
+
+    const apiUrl = import.meta.env.VITE_RSVP_API_URL;
+
+    if (!apiUrl) {
+      setError("Google Apps Script URL is missing. Please create a .env file and set VITE_RSVP_API_URL.");
       setLoading(false);
-      setSubmitted(true);
-    }, 1500);
+      return;
+    }
+
+    try {
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'text/plain;charset=utf-8',
+        },
+        body: JSON.stringify(form),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      
+      if (data.status === 'success') {
+        setSubmitted(true);
+        setForm({
+          name: '',
+          email: '',
+          guests: '1',
+          attending: '',
+          ceremony: [],
+          message: '',
+        });
+      } else {
+        throw new Error(data.message || 'Failed to submit RSVP.');
+      }
+    } catch (err) {
+      console.error('RSVP submission error:', err);
+      setError(err.message || 'Unable to submit RSVP. Please check your internet connection.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -210,6 +251,16 @@ Please RSVP at your earliest convenience.          </p>
                     id="rsvp-message"
                   />
                 </div>
+
+                {error && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="p-4 rounded-xl border border-red-500/30 bg-red-500/10 text-red-400 text-sm font-cormorant text-center"
+                  >
+                    ⚠️ {error}
+                  </motion.div>
+                )}
 
                 {/* Submit */}
                 <motion.button
