@@ -10,15 +10,11 @@ import { useInView } from 'react-intersection-observer';
 
 /* ─── Data ────────────────────────────────────────────────── */
 const groomTraits = [
-  { icon: '🦁', label: 'Strength', color: '#b76e79' },
-  { icon: '🤝', label: 'Kind', color: '#5b8cb0' },
-  { icon: '💡', label: 'Visionary', color: '#a8708c' },
+  
 ];
 
 const brideTraits = [
-  { icon: '🦋', label: 'Grace', color: '#a8708c' },
-  { icon: '🎨', label: 'Artistic', color: '#5b8cb0' },
-  { icon: '💖', label: 'Radiant', color: '#b76e79' },
+  
 ];
 
 /* ─── Trait Pill ──────────────────────────────────────────── */
