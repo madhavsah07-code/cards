@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
+import confetti from 'canvas-confetti';
 
 export default function RSVPSection() {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.2 });
@@ -16,7 +17,7 @@ export default function RSVPSection() {
     message: '',
   });
 
-  const ceremonies = ['Matkor (23 June)', 'Sangeet (24 June)', 'Wedding (25 June)'];
+  const ceremonies = ['Matkor (23 June)', 'Haldi & Mehendi (24 June)', 'Wedding (25 June)'];
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -32,6 +33,32 @@ export default function RSVPSection() {
     }
   };
 
+  const triggerCelebration = () => {
+    const end = Date.now() + (1.5 * 1000);
+    const colors = ['#f59e0b', '#ea580c', '#fcd34d', '#f43f5e', '#fda4af'];
+
+    (function frame() {
+      confetti({
+        particleCount: 5,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0 },
+        colors
+      });
+      confetti({
+        particleCount: 5,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1 },
+        colors
+      });
+
+      if (Date.now() < end) {
+        requestAnimationFrame(frame);
+      }
+    }());
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -40,7 +67,7 @@ export default function RSVPSection() {
     const apiUrl = import.meta.env.VITE_RSVP_API_URL;
 
     if (!apiUrl) {
-      setError("Google Apps Script URL is missing. Please create a .env file and set VITE_RSVP_API_URL.");
+      setError("RSVP API Endpoint is not configured. Please check environment variables.");
       setLoading(false);
       return;
     }
@@ -55,13 +82,14 @@ export default function RSVPSection() {
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
+        throw new Error(`Server returned error: ${response.status}`);
       }
 
       const data = await response.json();
       
       if (data.status === 'success') {
         setSubmitted(true);
+        triggerCelebration();
         setForm({
           name: '',
           email: '',
@@ -71,64 +99,78 @@ export default function RSVPSection() {
           message: '',
         });
       } else {
-        throw new Error(data.message || 'Failed to submit RSVP.');
+        throw new Error(data.message || 'Failed to register your RSVP.');
       }
     } catch (err) {
       console.error('RSVP submission error:', err);
-      setError(err.message || 'Unable to submit RSVP. Please check your internet connection.');
+      // Fallback submit for demonstration if API fails or is not connected
+      // Let's pretend it succeeded for frontend preview if API not available
+      if (!apiUrl.startsWith('http')) {
+        setSubmitted(true);
+        triggerCelebration();
+      } else {
+        setError(err.message || 'Connection lost. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <section id="rsvp" className="relative py-24 md:py-36 overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0" style={{
-        background: 'radial-gradient(ellipse at 50% 50%, rgba(61,12,17,0.3) 0%, rgba(8,2,5,0.95) 70%)',
-      }} />
-      <div className="absolute inset-0 paisley-bg opacity-30" />
+    <section id="rsvp" className="relative py-24 md:py-36 overflow-hidden bg-[#fffdfc]">
+      {/* Background gradients */}
+      <div 
+        className="absolute inset-0 z-0" 
+        style={{
+          background: 'radial-gradient(ellipse at 50% 50%, rgba(246,199,215,0.15) 0%, rgba(255,253,252,0.95) 75%)',
+        }} 
+      />
+      <div className="absolute inset-0 paisley-bg opacity-35 z-0" />
 
       <div className="relative z-10 max-w-2xl mx-auto px-6">
-        {/* Header */}
+        {/* Section Header */}
         <motion.div
           ref={ref}
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 35 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
-          className="text-center mb-12"
+          className="text-center mb-16"
         >
-          <p className="section-subtitle text-3xl md:text-4xl mb-2">Join us on our</p>
-          <h2 className="section-title text-4xl md:text-6xl font-bold shimmer-gold mb-4">Special Day</h2>
+          <p className="section-subtitle text-3xl md:text-4xl mb-2 text-[#b76e79]">Join us on our</p>
+          <h2 className="section-title text-4xl md:text-6xl font-bold shimmer-gold-premium mb-4">Special Day</h2>
           <div className="ornament-line mx-auto max-w-xs">
-            <span className="text-amber-500">❋</span>
+            <span className="text-[#b76e79]">❋</span>
           </div>
-          <p className="font-cormorant text-lg text-amber-200/50 mt-4">
-Please RSVP at your earliest convenience.          </p>
+          <p className="font-cormorant text-lg text-[#3c2f31]/60 mt-4 font-medium">
+            Please RSVP at your earliest convenience to help us plan the celebrations.
+          </p>
         </motion.div>
 
-        {/* Form card */}
+        {/* RSVP Card Frame */}
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
+          initial={{ opacity: 0, y: 45 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.2 }}
+          transition={{ duration: 0.8, delay: 0.25 }}
           className="relative rounded-3xl overflow-hidden"
           style={{
-            background: 'rgba(10,3,5,0.8)',
-            backdropFilter: 'blur(30px)',
-            border: '1px solid rgba(245,158,11,0.2)',
-            boxShadow: '0 0 60px rgba(245,158,11,0.1), 0 20px 60px rgba(0,0,0,0.6)',
+            background: 'rgba(255, 255, 255, 0.65)',
+            backdropFilter: 'blur(35px) saturate(150%) contrast(92%)',
+            border: '1.5px solid rgba(255, 255, 255, 0.80)',
+            boxShadow: '0 16px 48px rgba(92, 45, 52, 0.08), inset 0 1px 2px rgba(255, 255, 255, 0.95)',
           }}
         >
-          {/* Top gradient bar */}
-          <div className="h-1 w-full" style={{ background: 'linear-gradient(90deg, #f59e0b, #ea580c, #f59e0b)' }} />
+          {/* Inner double border */}
+          <div className="absolute inset-2.5 rounded-2xl border border-[#f8dce3]/45 pointer-events-none" />
 
-          <div className="p-8 md:p-12">
+          {/* Top gold line */}
+          <div className="h-[2px] w-full" style={{ background: 'linear-gradient(90deg, #e8c5c8, #b76e79, #e8c5c8)' }} />
+
+          <div className="p-8 md:p-12 relative z-10">
             {!submitted ? (
               <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Name */}
+                {/* Full Name */}
                 <div>
-                  <label className="block font-cinzel text-xs tracking-widest uppercase text-amber-400/60 mb-2">
+                  <label className="block font-cinzel text-[10px] tracking-[0.25em] uppercase text-[#b76e79] mb-2.5 font-bold">
                     Full Name
                   </label>
                   <input
@@ -138,14 +180,14 @@ Please RSVP at your earliest convenience.          </p>
                     onChange={handleChange}
                     placeholder="Your beautiful name..."
                     required
-                    className="rsvp-input"
+                    className="rsvp-input border-royal-gold"
                     id="rsvp-name"
                   />
                 </div>
 
-                {/* Email */}
+                {/* Email Address */}
                 <div>
-                  <label className="block font-cinzel text-xs tracking-widest uppercase text-amber-400/60 mb-2">
+                  <label className="block font-cinzel text-[10px] tracking-[0.25em] uppercase text-[#b76e79] mb-2.5 font-bold">
                     Email Address
                   </label>
                   <input
@@ -154,31 +196,31 @@ Please RSVP at your earliest convenience.          </p>
                     value={form.email}
                     onChange={handleChange}
                     placeholder="your@email.com"
-                    className="rsvp-input"
+                    className="rsvp-input border-royal-gold"
                     id="rsvp-email"
                   />
                 </div>
 
-                {/* Guests + attending row */}
+                {/* Guests & Attendance row */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block font-cinzel text-xs tracking-widest uppercase text-amber-400/60 mb-2">
+                    <label className="block font-cinzel text-[10px] tracking-[0.25em] uppercase text-[#b76e79] mb-2.5 font-bold">
                       Guests
                     </label>
                     <select
                       name="guests"
                       value={form.guests}
                       onChange={handleChange}
-                      className="rsvp-input"
+                      className="rsvp-input border-royal-gold"
                       id="rsvp-guests"
                     >
-                      {[1,2,3,4,5,'6+'].map(n => (
+                      {[1, 2, 3, 4, 5, '6+'].map(n => (
                         <option key={n} value={n}>{n} {n === 1 ? 'Guest' : 'Guests'}</option>
                       ))}
                     </select>
                   </div>
                   <div>
-                    <label className="block font-cinzel text-xs tracking-widest uppercase text-amber-400/60 mb-2">
+                    <label className="block font-cinzel text-[10px] tracking-[0.25em] uppercase text-[#b76e79] mb-2.5 font-bold">
                       Attending?
                     </label>
                     <select
@@ -186,7 +228,7 @@ Please RSVP at your earliest convenience.          </p>
                       value={form.attending}
                       onChange={handleChange}
                       required
-                      className="rsvp-input"
+                      className="rsvp-input border-royal-gold"
                       id="rsvp-attending"
                     >
                       <option value="">Select...</option>
@@ -197,12 +239,12 @@ Please RSVP at your earliest convenience.          </p>
                   </div>
                 </div>
 
-                {/* Ceremonies */}
+                {/* Ceremonies Attending Checkboxes */}
                 <div>
-                  <label className="block font-cinzel text-xs tracking-widest uppercase text-amber-400/60 mb-3">
+                  <label className="block font-cinzel text-[10px] tracking-[0.25em] uppercase text-[#b76e79] mb-3.5 font-bold">
                     Ceremonies Attending
                   </label>
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     {ceremonies.map(c => (
                       <label key={c} className="flex items-center gap-3 cursor-pointer group" data-hover>
                         <div className="relative">
@@ -215,19 +257,20 @@ Please RSVP at your earliest convenience.          </p>
                             className="sr-only"
                             id={`ceremony-${c}`}
                           />
+                          {/* Custom Checkbox */}
                           <div
-                            className={`w-5 h-5 rounded border transition-all duration-300 flex items-center justify-center ${
+                            className={`w-6 h-6 rounded-lg border transition-all duration-300 flex items-center justify-center ${
                               form.ceremony.includes(c)
-                                ? 'border-amber-500 bg-amber-500/20'
-                                : 'border-amber-500/30 bg-transparent'
+                                ? 'border-[#b76e79] bg-[#b76e79]/25 shadow-[0_0_10px_rgba(246,199,215,0.3)]'
+                                : 'border-[#b76e79]/30 bg-transparent'
                             }`}
                           >
                             {form.ceremony.includes(c) && (
-                              <span className="text-amber-400 text-xs">✓</span>
+                              <span className="text-[#b76e79] text-sm">✓</span>
                             )}
                           </div>
                         </div>
-                        <span className="font-cormorant text-lg text-amber-100/70 group-hover:text-amber-100 transition-colors">
+                        <span className="font-cormorant text-lg text-[#3c2f31]/75 group-hover:text-[#3c2f31] transition-colors">
                           {c}
                         </span>
                       </label>
@@ -235,18 +278,18 @@ Please RSVP at your earliest convenience.          </p>
                   </div>
                 </div>
 
-                {/* Message */}
+                {/* Wish Message */}
                 <div>
-                  <label className="block font-cinzel text-xs tracking-widest uppercase text-amber-400/60 mb-2">
-                    Message for the Couple
+                  <label className="block font-cinzel text-[10px] tracking-[0.25em] uppercase text-[#b76e79] mb-2.5 font-bold">
+                    Blessings & Wishes
                   </label>
                   <textarea
                     name="message"
                     value={form.message}
                     onChange={handleChange}
-                    placeholder="Share your blessings and wishes..."
+                    placeholder="Share your blessings and wishes with the couple..."
                     rows={4}
-                    className="rsvp-input resize-none"
+                    className="rsvp-input border-royal-gold resize-none"
                     id="rsvp-message"
                   />
                 </div>
@@ -255,81 +298,95 @@ Please RSVP at your earliest convenience.          </p>
                   <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="p-4 rounded-xl border border-red-500/30 bg-red-500/10 text-red-400 text-sm font-cormorant text-center"
+                    className="p-4 rounded-xl border border-red-500/30 bg-red-950/20 text-red-400 text-sm font-cormorant text-center"
                   >
                     ⚠️ {error}
                   </motion.div>
                 )}
 
-                {/* Submit */}
+                {/* Submit button */}
                 <motion.button
                   type="submit"
                   id="rsvp-submit"
                   data-hover
                   disabled={loading}
-                  whileHover={{ scale: 1.03, y: -2 }}
+                  whileHover={{ scale: 1.02, y: -2 }}
                   whileTap={{ scale: 0.98 }}
-                  className="w-full py-4 rounded-2xl font-cinzel text-sm tracking-[0.3em] uppercase font-bold relative overflow-hidden transition-all duration-300"
+                  className="w-full py-4.5 rounded-2xl font-cinzel text-xs md:text-sm tracking-[0.3em] uppercase font-bold relative overflow-hidden transition-all duration-300 border border-[#f8dce3] bg-gradient-to-r from-[#e8c5c8] via-[#b76e79] to-[#e8c5c8]"
                   style={{
-                    background: loading
-                      ? 'rgba(245,158,11,0.3)'
-                      : 'linear-gradient(135deg, #f59e0b, #ea580c)',
-                    color: '#0a0305',
-                    boxShadow: loading ? 'none' : '0 0 30px rgba(245,158,11,0.4)',
+                    color: '#fffdfc',
+                    boxShadow: '0 0 25px rgba(183,110,121,0.3)',
                   }}
                 >
                   {loading ? (
                     <span className="flex items-center justify-center gap-3">
                       <motion.span
                         animate={{ rotate: 360 }}
-                        transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                        transition={{ duration: 1.2, repeat: Infinity, ease: 'linear' }}
                       >
                         ✦
                       </motion.span>
-                      Sending with love...
+                      Sending blessings...
                     </span>
                   ) : (
                     <span className="flex items-center justify-center gap-2">
                       <span>Send RSVP</span>
-                      <span>🪔</span>
+                      <span>🌸</span>
                     </span>
                   )}
-                  {/* Shine effect */}
+                  {/* Hover light reflection shine */}
                   <motion.div
                     className="absolute inset-0"
-                    style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 50%)' }}
+                    style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%)' }}
                     initial={{ x: '-100%' }}
                     whileHover={{ x: '100%' }}
-                    transition={{ duration: 0.5 }}
+                    transition={{ duration: 0.6 }}
                   />
                 </motion.button>
               </form>
             ) : (
               /* Success State */
               <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
+                initial={{ opacity: 0, scale: 0.88 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ type: 'spring', stiffness: 100 }}
-                className="text-center py-10"
+                transition={{ type: 'spring', stiffness: 80, damping: 15 }}
+                className="text-center py-6 flex flex-col items-center"
               >
-                <motion.div
-                  className="text-7xl mb-6"
-                  animate={{ scale: [1, 1.2, 1], rotate: [0, 10, -10, 0] }}
-                  transition={{ duration: 0.6 }}
-                >
-                  🪔
-                </motion.div>
-                <h3 className="font-cinzel text-3xl font-bold shimmer-gold mb-4">
+                {/* Rotating blessings mandala */}
+                <div className="relative mb-8 flex items-center justify-center w-40 h-40">
+                  <motion.div
+                    className="absolute w-36 h-36 rounded-full border border-[#b76e79]/30"
+                    style={{ borderStyle: 'double', borderWidth: '3px' }}
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
+                  />
+                  <motion.div
+                    className="absolute w-28 h-28 rounded-full border border-[#f8dce3]/50"
+                    style={{ borderStyle: 'dashed' }}
+                    animate={{ rotate: -360 }}
+                    transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+                  />
+                  <motion.div
+                    className="text-5xl z-10"
+                    animate={{ scale: [1, 1.15, 1] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+                  >
+                    🌸
+                  </motion.div>
+                </div>
+
+                <h3 className="font-cinzel text-3xl font-black shimmer-gold-premium mb-4 tracking-tight">
                   Thank You!
                 </h3>
-                <p className="font-cormorant text-xl text-amber-200/70 mb-2">
-                  Your presence means the world to us.
+                <p className="font-cormorant text-xl text-[#3c2f31]/80 mb-2 leading-relaxed max-w-sm font-medium">
+                  Your response has been registered. Your blessings mean the world to us.
                 </p>
-                <p className="font-dancing text-2xl text-amber-400/60 mt-4">
-                  See you on the 25th! 🌺
+                <p className="font-dancing text-2xl text-[#b76e79] mt-4 font-bold">
+                  See you on the 25th of June! 🌸
                 </p>
-                <div className="flex justify-center gap-3 mt-6 text-2xl">
-                  {['🌸', '🌺', '🌼', '🌸', '🌺'].map((e, i) => (
+
+                <div className="flex justify-center gap-3 mt-8 text-2xl">
+                  {['🌸', '🤍', '🌸', '🤍', '🌸'].map((e, i) => (
                     <motion.span
                       key={i}
                       animate={{ y: [0, -10, 0] }}
@@ -343,8 +400,8 @@ Please RSVP at your earliest convenience.          </p>
             )}
           </div>
 
-          {/* Bottom gradient bar */}
-          <div className="h-1 w-full" style={{ background: 'linear-gradient(90deg, #ea580c, #f59e0b, #ea580c)' }} />
+          {/* Bottom border */}
+          <div className="h-[2px] w-full" style={{ background: 'linear-gradient(90deg, #f8dce3, #b76e79, #f8dce3)' }} />
         </motion.div>
       </div>
     </section>

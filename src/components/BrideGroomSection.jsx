@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import {
   motion,
   useScroll,
@@ -10,110 +10,54 @@ import { useInView } from 'react-intersection-observer';
 
 /* ─── Data ────────────────────────────────────────────────── */
 const groomTraits = [
-  
+  { icon: '🦁', label: 'Strength', color: '#b76e79' },
+  { icon: '🤝', label: 'Kind', color: '#5b8cb0' },
+  { icon: '💡', label: 'Visionary', color: '#a8708c' },
 ];
 
 const brideTraits = [
-  
+  { icon: '🦋', label: 'Grace', color: '#a8708c' },
+  { icon: '🎨', label: 'Artistic', color: '#5b8cb0' },
+  { icon: '💖', label: 'Radiant', color: '#b76e79' },
 ];
-
-/* ─── Mandala SVG ─────────────────────────────────────────── */
-function MandalaSVG() {
-  return (
-    <svg viewBox="0 0 200 200" fill="none" className="w-full h-full">
-      {/* Outer decorative circles */}
-      {[90, 75, 60, 45, 30].map((r, i) => (
-        <circle
-          key={i}
-          cx="100" cy="100" r={r}
-          stroke={`rgba(245,158,11,${0.08 + i * 0.05})`}
-          strokeWidth="0.8"
-          strokeDasharray={i % 2 === 0 ? '4 4' : 'none'}
-        />
-      ))}
-      {/* Petals – 8 directions */}
-      {Array.from({ length: 8 }).map((_, i) => {
-        const angle = (i * 45 * Math.PI) / 180;
-        const x = 100 + 65 * Math.cos(angle);
-        const y = 100 + 65 * Math.sin(angle);
-        return (
-          <ellipse
-            key={i}
-            cx={x} cy={y}
-            rx="9" ry="5"
-            fill="rgba(245,158,11,0.12)"
-            transform={`rotate(${i * 45} ${x} ${y})`}
-          />
-        );
-      })}
-      {/* Inner star points */}
-      {Array.from({ length: 12 }).map((_, i) => {
-        const angle = (i * 30 * Math.PI) / 180;
-        const x1 = 100 + 38 * Math.cos(angle);
-        const y1 = 100 + 38 * Math.sin(angle);
-        const x2 = 100 + 52 * Math.cos(angle);
-        const y2 = 100 + 52 * Math.sin(angle);
-        return (
-          <line key={i} x1={x1} y1={y1} x2={x2} y2={y2}
-            stroke="rgba(245,158,11,0.35)" strokeWidth="1" />
-        );
-      })}
-      {/* Dot accents */}
-      {Array.from({ length: 8 }).map((_, i) => {
-        const angle = (i * 45 * Math.PI) / 180;
-        return (
-          <circle key={i}
-            cx={100 + 78 * Math.cos(angle)}
-            cy={100 + 78 * Math.sin(angle)}
-            r="2.5" fill="rgba(245,158,11,0.5)" />
-        );
-      })}
-      {/* Center */}
-      <circle cx="100" cy="100" r="18" fill="rgba(8,2,5,0.9)"
-        stroke="rgba(245,158,11,0.6)" strokeWidth="1" />
-      <circle cx="100" cy="100" r="10" fill="rgba(245,158,11,0.12)"
-        stroke="rgba(249,115,22,0.5)" strokeWidth="0.8" />
-    </svg>
-  );
-}
 
 /* ─── Trait Pill ──────────────────────────────────────────── */
 function TraitPill({ icon, label, color, delay }) {
-  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.3 });
+  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.2 });
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, scale: 0.7, y: 15 }}
+      initial={{ opacity: 0, scale: 0.8, y: 15 }}
       animate={inView ? { opacity: 1, scale: 1, y: 0 } : {}}
       transition={{ duration: 0.5, delay, type: 'spring', stiffness: 120 }}
-      whileHover={{ scale: 1.12, y: -4 }}
-      className="flex flex-col items-center gap-1.5 cursor-default group"
+      whileHover={{ scale: 1.1, y: -3 }}
+      className="flex flex-col items-center gap-2 cursor-default group"
       data-hover
     >
       <motion.div
-        className="w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center relative overflow-hidden"
+        className="w-14 h-14 rounded-2xl flex items-center justify-center relative overflow-hidden"
         style={{
-          background: `rgba(8,2,5,0.7)`,
-          border: `1px solid ${color}40`,
-          boxShadow: `0 0 14px ${color}20`,
+          background: `rgba(255, 255, 255, 0.45)`,
+          backdropFilter: 'blur(15px) saturate(130%)',
+          WebkitBackdropFilter: 'blur(15px) saturate(130%)',
+          border: `1.5px solid ${color}35`,
+          boxShadow: `0 8px 24px rgba(92, 45, 52, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.8)`,
         }}
         whileHover={{
-          boxShadow: `0 0 30px ${color}60, 0 0 60px ${color}20`,
-          borderColor: `${color}99`,
+          boxShadow: `0 0 25px ${color}40, 0 0 45px ${color}15`,
+          borderColor: `${color}90`,
         }}
         transition={{ duration: 0.2 }}
-        animate={{ y: [0, -4, 0] }}
       >
-        {/* Glow bg */}
         <motion.div
           className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-          style={{ background: `radial-gradient(circle, ${color}15, transparent)` }}
+          style={{ background: `radial-gradient(circle, ${color}20, transparent 70%)` }}
         />
         <span className="text-2xl relative z-10">{icon}</span>
       </motion.div>
       <span
-        className="font-cinzel text-[10px] tracking-widest uppercase"
-        style={{ color: `${color}99` }}
+        className="font-cinzel text-[9px] md:text-[10px] tracking-widest uppercase font-semibold text-center"
+        style={{ color: `${color}` }}
       >
         {label}
       </span>
@@ -126,11 +70,11 @@ function PortraitPanel({ side, imgSrc, title, name, desc, traits, accentColor, g
   const isLeft = side === 'left';
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.15 });
 
-  // Mouse-tilt parallax
+  // Mouse-tilt 3D parallax
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
-  const rotateX = useSpring(useTransform(mouseY, [-150, 150], [4, -4]), { stiffness: 120, damping: 20 });
-  const rotateY = useSpring(useTransform(mouseX, [-150, 150], [-4, 4]), { stiffness: 120, damping: 20 });
+  const rotateX = useSpring(useTransform(mouseY, [-200, 200], [7, -7]), { stiffness: 120, damping: 22 });
+  const rotateY = useSpring(useTransform(mouseX, [-200, 200], [-7, 7]), { stiffness: 120, damping: 22 });
 
   const handleMouse = (e) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -142,110 +86,107 @@ function PortraitPanel({ side, imgSrc, title, name, desc, traits, accentColor, g
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, x: isLeft ? -80 : 80 }}
+      initial={{ opacity: 0, x: isLeft ? -70 : 70 }}
       animate={inView ? { opacity: 1, x: 0 } : {}}
-      transition={{ duration: 0.9, delay, type: 'spring', stiffness: 50, damping: 18 }}
-      className="flex-1 min-w-0 flex flex-col items-center"
+      transition={{ duration: 0.8, delay, type: 'spring', stiffness: 50 }}
+      className="flex-1 min-w-0 flex flex-col items-center w-full"
     >
-      {/* Portrait card */}
+      {/* 3D tilted Card Wrapper */}
       <motion.div
-        className="relative w-full max-w-sm rounded-3xl overflow-hidden cursor-default"
-        style={{ rotateX, rotateY, transformStyle: 'preserve-3d', perspective: 800 }}
+        className="relative w-full max-w-sm rounded-3xl overflow-hidden cursor-pointer"
+        style={{ rotateX, rotateY, transformStyle: 'preserve-3d', perspective: 1000 }}
         onMouseMove={handleMouse}
         onMouseLeave={resetMouse}
-        whileHover={{ scale: 1.01 }}
+        whileHover={{ scale: 1.02 }}
         transition={{ duration: 0.3 }}
       >
-        {/* Outer glow ring – animated */}
+        {/* Glowing border ring */}
         <motion.div
-          className="absolute -inset-1 rounded-3xl z-0"
+          className="absolute -inset-[2px] rounded-3xl z-0"
           style={{
-            background: `linear-gradient(135deg, ${accentColor}80, ${glowColor}40, ${accentColor}80)`,
+            background: `linear-gradient(135deg, ${accentColor}, ${glowColor}, ${accentColor})`,
             backgroundSize: '200% 200%',
           }}
           animate={{ backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }}
-          transition={{ duration: 5, repeat: Infinity, ease: 'linear' }}
+          transition={{ duration: 6, repeat: Infinity, ease: 'linear' }}
         />
 
-        {/* Portrait image */}
+        {/* Portrait container */}
         <div className="relative z-10 rounded-3xl overflow-hidden" style={{ aspectRatio: '3/4' }}>
           <motion.img
             src={imgSrc}
             alt={title}
-            className="w-full h-full object-cover object-top"
-            animate={{ scale: [1, 1.04, 1] }}
-            transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
+            className="w-full h-full object-cover object-top filter contrast-[1.05]"
+            animate={{ scale: [1, 1.03, 1] }}
+            transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
           />
 
-          {/* Overlay gradient */}
+          {/* Luxury bottom gradient */}
           <div
-            className="absolute inset-0"
-            style={{
-              background: isLeft
-                ? `linear-gradient(to top, rgba(8,2,5,0.95) 0%, rgba(8,2,5,0.4) 40%, rgba(8,2,5,0.1) 70%, transparent 100%)`
-                : `linear-gradient(to top, rgba(8,2,5,0.95) 0%, rgba(8,2,5,0.4) 40%, rgba(8,2,5,0.1) 70%, transparent 100%)`,
-            }}
+            className="absolute inset-0 bg-gradient-to-t from-[#fffdfc] via-[#fffdfc]/60 to-transparent opacity-95"
           />
 
-          {/* Side glow */}
+          {/* Soft background aura */}
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
-              background: `radial-gradient(ellipse at ${isLeft ? '80%' : '20%'} 30%, ${glowColor}20, transparent 60%)`,
+              background: `radial-gradient(ellipse at ${isLeft ? '80%' : '20%'} 30%, ${glowColor}15, transparent 65%)`,
             }}
           />
 
-          {/* Title badge – top */}
+          {/* Title tag - Top center */}
           <motion.div
             className="absolute top-5 left-0 right-0 flex justify-center"
             initial={{ opacity: 0, y: -10 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: delay + 0.4 }}
+            transition={{ delay: delay + 0.3 }}
           >
             <div
-              className="px-5 py-1.5 rounded-full backdrop-blur-md"
+              className="px-5 py-1.5 rounded-full backdrop-blur-[20px] backdrop-saturate-[140%]"
               style={{
-                background: 'rgba(8,2,5,0.6)',
-                border: `1px solid ${accentColor}50`,
+                background: 'rgba(255,255,255,0.65)',
+                border: `1.5px solid rgba(255, 255, 255, 0.8)`,
+                boxShadow: `0 8px 24px rgba(92,45,52,0.06), 0 0 15px ${accentColor}15, inset 0 1px 1px rgba(255,255,255,0.9)`,
               }}
             >
-              <p className="font-cinzel text-xs tracking-[0.4em] uppercase" style={{ color: accentColor }}>
+              <p className="font-cinzel text-[10px] tracking-[0.35em] uppercase font-bold" style={{ color: accentColor }}>
                 {title}
               </p>
             </div>
           </motion.div>
 
-          {/* Name + desc – bottom overlay */}
-          <div className="absolute bottom-0 left-0 right-0 p-6">
+          {/* Names Overlay - Bottom Center */}
+          <div className="absolute bottom-0 left-0 right-0 p-6 text-center">
             <motion.h3
-              className="font-cinzel font-bold text-3xl md:text-4xl shimmer-gold mb-1 leading-tight"
-              initial={{ opacity: 0, y: 20 }}
+              className="font-cinzel font-bold text-4xl shimmer-gold-premium mb-2 filter drop-shadow-md"
+              initial={{ opacity: 0, y: 15 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: delay + 0.5 }}
+              transition={{ delay: delay + 0.45 }}
             >
               {name}
             </motion.h3>
             <motion.p
-              className="font-cormorant italic text-base text-amber-100/60 leading-snug"
+              className="font-cormorant italic text-base text-[#3c2f31]/80 leading-relaxed max-w-xs mx-auto font-medium"
               initial={{ opacity: 0 }}
               animate={inView ? { opacity: 1 } : {}}
-              transition={{ delay: delay + 0.65 }}
+              transition={{ delay: delay + 0.6 }}
             >
               {desc}
             </motion.p>
           </div>
 
-          {/* Corner sparkles */}
-          {[
-            { pos: 'top-3 right-3', delay: delay + 0.6 },
-            { pos: 'top-14 right-5', delay: delay + 0.9 },
-          ].map(({ pos, delay: d }, i) => (
+          {/* Floating particle sparkles inside portrait */}
+          {Array.from({ length: 3 }).map((_, i) => (
             <motion.span
               key={i}
-              className={`absolute ${pos} text-xs`}
-              style={{ color: accentColor }}
-              animate={{ opacity: [0, 1, 0], scale: [0.5, 1.3, 0.5] }}
-              transition={{ duration: 2.5, repeat: Infinity, delay: d }}
+              className="absolute text-xs"
+              style={{
+                color: accentColor,
+                left: `${30 + i * 25}%`,
+                top: `${40 + i * 15}%`,
+              }}
+              animate={{ opacity: [0, 0.8, 0], scale: [0.6, 1.2, 0.6] }}
+              transition={{ duration: 3, repeat: Infinity, delay: delay + i * 0.5 }}
             >
               ✦
             </motion.span>
@@ -253,22 +194,16 @@ function PortraitPanel({ side, imgSrc, title, name, desc, traits, accentColor, g
         </div>
       </motion.div>
 
-      {/* Traits grid */}
+      {/* Trait descriptors */}
       <motion.div
-        className="mt-7 w-full max-w-sm"
+        className="mt-8 w-full max-w-sm"
         initial={{ opacity: 0, y: 20 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
-        transition={{ delay: delay + 0.7 }}
+        transition={{ delay: delay + 0.65 }}
       >
-        <p
-          className="font-cinzel text-[10px] tracking-[0.5em] uppercase text-center mb-4"
-          style={{ color: `${accentColor}60` }}
-        >
-          
-        </p>
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-3 gap-4">
           {traits.map((t, i) => (
-            <TraitPill key={t.label} {...t} delay={delay + 0.8 + i * 0.07} />
+            <TraitPill key={t.label} {...t} delay={delay + 0.75 + i * 0.08} />
           ))}
         </div>
       </motion.div>
@@ -278,116 +213,67 @@ function PortraitPanel({ side, imgSrc, title, name, desc, traits, accentColor, g
 
 /* ─── Center Monogram ─────────────────────────────────────── */
 function CenterMonogram() {
-  const { ref, inView } = useInView({
-    triggerOnce: true,
-    threshold: 0.3,
-  });
+  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.3 });
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, scale: 0.5 }}
+      initial={{ opacity: 0, scale: 0.7 }}
       animate={inView ? { opacity: 1, scale: 1 } : {}}
-      transition={{
-        duration: 1,
-        delay: 0.3,
-        type: 'spring',
-        stiffness: 60,
-      }}
-      className="flex-shrink-0 relative z-10 flex items-center justify-center self-center lg:self-auto w-full lg:w-auto min-h-[120px] lg:min-h-[180px]"
+      transition={{ duration: 1, delay: 0.3, type: 'spring' }}
+      className="flex-shrink-0 relative z-10 flex items-center justify-center self-center lg:self-auto w-full lg:w-auto min-h-[140px] lg:min-h-[220px]"
     >
-      {/* Left line */}
+      {/* Decorative horizontal lines */}
       <motion.div
-        className="absolute left-[-45px] lg:left-[-70px] top-1/2 -translate-y-1/2 h-px w-10 lg:w-16"
-        style={{
-          background:
-            'linear-gradient(90deg, transparent, rgba(245,158,11,0.5))',
-        }}
+        className="absolute left-[-50px] lg:left-[-80px] top-1/2 -translate-y-1/2 h-[1px] w-12 lg:w-20"
+        style={{ background: 'linear-gradient(90deg, transparent, rgba(183,110,121,0.4))' }}
+        initial={{ scaleX: 0 }}
+        animate={{ scaleX: 1 }}
+        transition={{ duration: 0.8, delay: 0.4 }}
+      />
+      <motion.div
+        className="absolute right-[-50px] lg:right-[-80px] top-1/2 -translate-y-1/2 h-[1px] w-12 lg:w-20"
+        style={{ background: 'linear-gradient(90deg, rgba(183,110,121,0.4), transparent)' }}
         initial={{ scaleX: 0 }}
         animate={{ scaleX: 1 }}
         transition={{ duration: 0.8, delay: 0.4 }}
       />
 
-      {/* Right line */}
-      <motion.div
-        className="absolute right-[-45px] lg:right-[-70px] top-1/2 -translate-y-1/2 h-px w-10 lg:w-16"
-        style={{
-          background:
-            'linear-gradient(90deg, rgba(245,158,11,0.5), transparent)',
-        }}
-        initial={{ scaleX: 0 }}
-        animate={{ scaleX: 1 }}
-        transition={{ duration: 0.8, delay: 0.4 }}
-      />
-
-      {/* Center logo */}
+      {/* Monogram logo with halo */}
       <motion.div
         className="relative flex items-center justify-center mx-auto"
-        animate={{ scale: [1, 1.08, 1] }}
-        transition={{ duration: 3, repeat: Infinity }}
+        animate={{ scale: [1, 1.05, 1] }}
+        transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
       >
         {/* Glow */}
         <motion.div
-          className="absolute w-28 h-28 lg:w-32 lg:h-32 rounded-full"
+          className="absolute w-32 h-32 lg:w-36 lg:h-36 rounded-full"
           style={{
-            background:
-              'radial-gradient(circle, rgba(251,191,36,0.22), transparent 70%)',
-            filter: 'blur(10px)',
+            background: 'radial-gradient(circle, rgba(246,199,215,0.4) 0%, transparent 70%)',
+            filter: 'blur(8px)',
           }}
-          animate={{
-            scale: [1, 1.15, 1],
-            opacity: [0.4, 0.8, 0.4],
-          }}
-          transition={{
-            duration: 2.5,
-            repeat: Infinity,
-          }}
+          animate={{ scale: [1, 1.12, 1], opacity: [0.4, 0.8, 0.4] }}
+          transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
         />
 
-        {/* Logo container */}
-        <div className="relative z-10 w-24 h-24 lg:w-24 lg:h-24 rounded-full bg-black/20 backdrop-blur-md border border-amber-400/20 flex items-center justify-center shadow-[0_0_45px_rgba(251,191,36,0.28)]">
-          
+        {/* Double-bordered container */}
+        <div className="relative z-10 w-26 h-26 lg:w-28 lg:h-28 rounded-full bg-white/50 backdrop-blur-[30px] backdrop-saturate-[150%] border border-white/70 flex items-center justify-center shadow-[0_12px_40px_rgba(92,45,52,0.08),inset_0_1px_1.5px_rgba(255,255,255,0.95)]">
+          {/* Decorative spinning ring */}
+          <motion.div
+            className="absolute inset-1.5 rounded-full border border-[#b76e79]/20"
+            style={{ borderStyle: 'dashed' }}
+            animate={{ rotate: 360 }}
+            transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
+          />
+
           <img
             src="/images/du-logo.png"
             alt="Durga & Ujjwal Logo"
-            className="w-16 lg:w-[72px] object-contain rounded-full p-1 scale-110 drop-shadow-[0_0_20px_rgba(251,191,36,0.75)]"
+            className="w-16 lg:w-20 object-contain rounded-full scale-105 drop-shadow-[0_0_10px_rgba(183,110,121,0.35)]"
           />
-
         </div>
       </motion.div>
     </motion.div>
-  );
-}
-
-/* ─── Ambient Particles ───────────────────────────────────── */
-function AmbientParticles() {
-  return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden">
-      {Array.from({ length: 30 }).map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute rounded-full"
-          style={{
-            width: Math.random() * 3 + 1,
-            height: Math.random() * 3 + 1,
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-            background: i % 3 === 0 ? '#f59e0b' : i % 3 === 1 ? '#ea580c' : '#fcd34d',
-            boxShadow: `0 0 ${Math.random() * 8 + 4}px currentColor`,
-          }}
-          animate={{
-            y: [0, -(Math.random() * 60 + 20), 0],
-            opacity: [0, 0.8, 0],
-            scale: [0, 1.2, 0],
-          }}
-          transition={{
-            duration: Math.random() * 5 + 4,
-            repeat: Infinity,
-            delay: Math.random() * 5,
-          }}
-        />
-      ))}
-    </div>
   );
 }
 
@@ -395,122 +281,134 @@ function AmbientParticles() {
 export default function BrideGroomSection() {
   const sectionRef = useRef(null);
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start end', 'end start'] });
-  const bgY = useTransform(scrollYProgress, [0, 1], ['-5%', '5%']);
+  const bgY = useTransform(scrollYProgress, [0, 1], ['-6%', '6%']);
 
-  const { ref: titleRef, inView: titleInView } = useInView({ triggerOnce: true, threshold: 0.4 });
+  const { ref: titleRef, inView: titleInView } = useInView({ triggerOnce: true, threshold: 0.3 });
 
   return (
     <section
       id="couple"
       ref={sectionRef}
-      className="relative py-24 md:py-36 overflow-hidden"
+      className="relative py-24 md:py-36 overflow-hidden bg-[#fffdfc]"
     >
-      {/* ── Background ── */}
-      <motion.div className="absolute inset-0" style={{ y: bgY }}>
+      {/* Parallax Background */}
+      <motion.div className="absolute inset-0 z-0" style={{ y: bgY }}>
         <div
           className="absolute inset-0"
           style={{
             background:
-              'radial-gradient(ellipse at 20% 50%, rgba(120,53,15,0.12) 0%, transparent 50%),' +
-              'radial-gradient(ellipse at 80% 50%, rgba(61,12,17,0.15) 0%, transparent 50%),' +
-              'linear-gradient(180deg, #080205 0%, #0d0308 50%, #080205 100%)',
+              'radial-gradient(ellipse at 15% 50%, rgba(246,199,215,0.15) 0%, transparent 60%),' +
+              'radial-gradient(ellipse at 85% 50%, rgba(207,232,255,0.15) 0%, transparent 60%),' +
+              'linear-gradient(180deg, #fffdfc 0%, #fff6ef 50%, #fffdfc 100%)',
           }}
         />
-        <div className="absolute inset-0 paisley-bg opacity-40" />
+        {/* Pattern overlay */}
+        <div className="absolute inset-0 paisley-bg opacity-35" />
       </motion.div>
 
-      {/* Ambient particles */}
-      <AmbientParticles />
+      {/* Floating flower sparks background layer */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+        {Array.from({ length: 20 }).map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute rounded-full"
+            style={{
+              width: Math.random() * 3 + 1,
+              height: Math.random() * 3 + 1,
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              background: i % 2 === 0 ? '#cfe8ff' : '#f6c7d7',
+              boxShadow: `0 0 ${Math.random() * 8 + 4}px currentColor`,
+            }}
+            animate={{
+              y: [0, -50, 0],
+              opacity: [0, 0.7, 0],
+              scale: [0, 1.2, 0],
+            }}
+            transition={{
+              duration: Math.random() * 5 + 4,
+              repeat: Infinity,
+              delay: Math.random() * 4,
+            }}
+          />
+        ))}
+      </div>
 
-      {/* Horizontal glow bars */}
-      <div
-        className="absolute top-0 left-0 right-0 h-px pointer-events-none"
-        style={{ background: 'linear-gradient(90deg, transparent, rgba(245,158,11,0.3), rgba(249,115,22,0.3), transparent)' }}
-      />
-      <div
-        className="absolute bottom-0 left-0 right-0 h-px pointer-events-none"
-        style={{ background: 'linear-gradient(90deg, transparent, rgba(245,158,11,0.3), rgba(249,115,22,0.3), transparent)' }}
-      />
-
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6">
-        {/* ── Section Header ── */}
+      <div className="relative z-10 max-w-7xl mx-auto px-6">
+        {/* Section Header */}
         <motion.div
           ref={titleRef}
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={titleInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
-          className="text-center mb-16 md:mb-20"
+          className="text-center mb-20"
         >
-          <p className="section-subtitle text-3xl md:text-4xl mb-2">Meet the</p>
-          <h2 className="section-title text-4xl md:text-6xl font-bold shimmer-gold mb-4">
+          <p className="section-subtitle text-3xl md:text-4xl mb-2 text-[#b76e79]">Meet the</p>
+          <h2 className="section-title text-4xl md:text-6xl font-bold shimmer-gold-premium mb-4">
             Bride &amp; Groom
           </h2>
           <div className="ornament-line mx-auto max-w-xs">
-            <span className="text-amber-500">❋</span>
+            <span className="text-[#b76e79]">❋</span>
           </div>
-          <p className="font-cormorant text-lg text-amber-200/50 mt-4 max-w-xl mx-auto italic">
-            Two beautiful souls, chosen by destiny, united by family, bound by love
+          <p className="font-cormorant text-lg text-[#3c2f31]/60 mt-4 max-w-xl mx-auto italic">
+            "Two beautiful souls, chosen by destiny, united by family, bound by love"
           </p>
         </motion.div>
 
-        {/* ── Split Layout ── */}
-        <div className="flex flex-col lg:flex-row items-start lg:items-center gap-10 lg:gap-6">
-          {/* Groom – Left */}
+        {/* Split Layout */}
+        <div className="flex flex-col lg:flex-row items-center lg:items-start gap-12 lg:gap-8 justify-center">
+          {/* Groom - Left (Pastel Blue/Rose Gold Theme) */}
           <PortraitPanel
             side="left"
             imgSrc="/images/groom_portrait.png"
             title="✦ The Groom ✦"
-            name="Ujjwal"
+            name="Ujjwal Anand"
             desc="A visionary spirit — composed, ambitious, and ever so warm at heart."
             traits={groomTraits}
-            accentColor="#f59e0b"
-            glowColor="#f97316"
+            accentColor="#b76e79"
+            glowColor="#cfe8ff"
             delay={0}
           />
 
-          {/* Center monogram */}
+          {/* Center Monogram connector */}
           <CenterMonogram />
 
-          {/* Bride – Right */}
+          {/* Bride - Right (Blush Pink/Rose Gold Theme) */}
           <PortraitPanel
             side="right"
             imgSrc="/images/bride_portrait.png"
             title="✦ The Bride ✦"
-            name="Durga"
+            name="Durga Sah"
             desc="A graceful soul — expressive, joyful, and radiant in every moment."
             traits={brideTraits}
-            accentColor="#f43f5e"
-            glowColor="#fb923c"
+            accentColor="#b76e79"
+            glowColor="#f8dce3"
             delay={0.15}
           />
         </div>
 
-        {/* ── Bottom ornament ── */}
+        {/* Bottom Ornament decorative row */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={titleInView ? { opacity: 1 } : {}}
-          transition={{ delay: 1.2 }}
+          transition={{ delay: 1 }}
           className="text-center mt-20"
         >
           <div className="flex justify-center items-center gap-4">
-            {['🪔', '🌺', '✦', '🌺', '🪔'].map((e, i) => (
+            {['🌸', '🤍', '✦', '🤍', '🌸'].map((e, i) => (
               <motion.span
                 key={i}
-                className="text-xl md:text-2xl opacity-50"
-                animate={{ y: [0, -8, 0], opacity: [0.4, 0.7, 0.4] }}
-                transition={{ duration: 2.5 + i * 0.3, repeat: Infinity, delay: i * 0.3 }}
+                className="text-xl md:text-2xl opacity-60"
+                animate={{ y: [0, -6, 0] }}
+                transition={{ duration: 2.5, repeat: Infinity, delay: i * 0.3 }}
               >
                 {e}
               </motion.span>
             ))}
           </div>
-          <motion.p
-            className="font-dancing text-xl text-amber-400/40 mt-4 italic"
-            animate={{ opacity: [0.4, 0.7, 0.4] }}
-            transition={{ duration: 4, repeat: Infinity }}
-          >
+          <p className="font-dancing text-xl text-[#b76e79]/60 mt-4 italic">
             Blessed by the divine, united by family
-          </motion.p>
+          </p>
         </motion.div>
       </div>
     </section>

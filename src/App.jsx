@@ -10,6 +10,7 @@ import EventTimeline from './components/EventTimeline';
 import GallerySection from './components/GallerySection';
 import FamilySection from './components/FamilySection';
 import RSVPSection from './components/RSVPSection';
+import VenueSection from './components/VenueSection';
 import Footer from './components/Footer';
 import FloatingPetals from './components/FloatingPetals';
 import MusicToggle from './components/MusicToggle';
@@ -33,7 +34,7 @@ function App() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#080205] overflow-x-hidden">
+    <div className="relative min-h-screen bg-[#fffdfc] overflow-x-hidden">
       <Cursor />
       <FloatingPetals />
 
@@ -62,6 +63,7 @@ function App() {
             <GallerySection />
             <FamilySection />
             <RSVPSection />
+            <VenueSection />
             <Footer />
             <MusicToggle />
           </motion.div>
