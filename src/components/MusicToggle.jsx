@@ -1,54 +1,17 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useAudio } from '../context/AudioContext';
 
 export default function MusicToggle() {
-  const [playing, setPlaying] = useState(false);
+  const { isPlaying, toggle } = useAudio();
   const [showTooltip, setShowTooltip] = useState(false);
-  const audioRef = useRef(null);
 
-  useEffect(() => {
-    const startMusic = async () => {
-      try {
-        if (!audioRef.current) {
-          audioRef.current = new Audio('/music/Sajna Darshan Raval Instrumental.mp3');
-          audioRef.current.loop = true;
-          audioRef.current.volume = 0.8;
-          audioRef.current.preload = 'auto';
-        }
-        await audioRef.current.play();
-        setPlaying(true);
-      } catch (error) {
-        console.log('Autoplay blocked:', error);
-      }
-    };
-    startMusic();
-  }, []);
-
-  const toggle = async () => {
-    try {
-      if (!audioRef.current) {
-        audioRef.current = new Audio('/music/Sajna Darshan Raval Instrumental.mp3');
-        audioRef.current.loop = true;
-        audioRef.current.volume = 0.8;
-        audioRef.current.preload = 'auto';
-      }
-
-      if (playing) {
-        audioRef.current.pause();
-      } else {
-        await audioRef.current.play();
-      }
-      setPlaying(!playing);
-    } catch (error) {
-      console.log('Audio action error:', error);
-    }
-  };
 
   return (
     <div className="fixed bottom-6 right-6 z-[500] flex items-center gap-4">
       {/* Audio Wave Visualizer on Left */}
       <AnimatePresence>
-        {playing && (
+        {isPlaying && (
           <motion.div 
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -94,7 +57,7 @@ export default function MusicToggle() {
             className="absolute bottom-16 right-0 bg-white/95 backdrop-blur-md border border-[#b76e79]/35 rounded-xl px-4 py-2 shadow-md"
           >
             <p className="font-cinzel text-[10px] tracking-widest text-[#b76e79] uppercase whitespace-nowrap font-bold">
-              {playing ? '♫ Ambient Music ON' : 'Play Ambient Music'}
+              {isPlaying ? '♫ Ambient Music ON' : 'Play Ambient Music'}
             </p>
           </motion.div>
         )}
@@ -110,7 +73,7 @@ export default function MusicToggle() {
         whileTap={{ scale: 0.94 }}
       >
         {/* Breathing background halo */}
-        {playing && (
+        {isPlaying && (
           <motion.div
             className="absolute inset-0 rounded-full"
             style={{
@@ -126,17 +89,17 @@ export default function MusicToggle() {
         <motion.div
           className="absolute inset-1 rounded-full border border-[#b76e79]/25"
           style={{ borderStyle: 'double', borderWidth: '2px' }}
-          animate={playing ? { rotate: 360 } : {}}
+          animate={isPlaying ? { rotate: 360 } : {}}
           transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
         />
 
         {/* Central Music/Mute Emoji Icon */}
         <motion.span
           className="text-xl relative z-10 select-none"
-          animate={playing ? { scale: [1, 1.15, 1], rotate: [0, 5, -5, 0] } : {}}
+          animate={isPlaying ? { scale: [1, 1.15, 1], rotate: [0, 5, -5, 0] } : {}}
           transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
         >
-          {playing ? '🪕' : '🔇'}
+          {isPlaying ? '🪕' : '🔇'}
         </motion.span>
       </motion.button>
     </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import LoadingScreen from './components/LoadingScreen';
 import Cursor from './components/Cursor';
@@ -14,11 +14,13 @@ import VenueSection from './components/VenueSection';
 import Footer from './components/Footer';
 import FloatingPetals from './components/FloatingPetals';
 import MusicToggle from './components/MusicToggle';
+import { AudioProvider, useAudio } from './context/AudioContext';
 
-function App() {
+function AppContent() {
   const [loading, setLoading] = useState(true);
   const [showOpening, setShowOpening] = useState(false);
   const [showMain, setShowMain] = useState(false);
+  const { play } = useAudio();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -29,6 +31,8 @@ function App() {
   }, []);
 
   const handleOpenInvitation = () => {
+    // Attempt play on direct button click interaction
+    play().catch((err) => console.log('Audio playback rejected on open button:', err));
     setShowOpening(false);
     setTimeout(() => setShowMain(true), 600);
   };
@@ -73,4 +77,13 @@ function App() {
   );
 }
 
+function App() {
+  return (
+    <AudioProvider>
+      <AppContent />
+    </AudioProvider>
+  );
+}
+
 export default App;
+
