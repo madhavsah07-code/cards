@@ -64,8 +64,8 @@ function AppContent() {
             <HeroSection />
             <BrideGroomSection />
             <EventTimeline />
-            <GallerySection />
             <FamilySection />
+            <GallerySection />
             <RSVPSection />
             <VenueSection />
             <Footer />

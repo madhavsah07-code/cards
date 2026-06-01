@@ -10,7 +10,7 @@ export function AudioProvider({ children }) {
   // Helper to initialize the audio singleton
   const initAudio = useCallback(() => {
     if (!audioRef.current) {
-      audioRef.current = new Audio('/music/xxx.mp3');
+      audioRef.current = new Audio('/music/ammadi_hi_nanna.mp3');
       audioRef.current.loop = true;
       audioRef.current.volume = 0.8;
       audioRef.current.preload = 'auto';
